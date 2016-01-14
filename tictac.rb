@@ -29,7 +29,8 @@ class Game
 
 	#this will allow the player to pick a location
 	def make_move
-		puts "#{@player1.name}, please make your selection. Remember to use the numbers 1-9 for it to be valid"			
+		puts "#{@player1.name}, please make your selection. Remember to use the numbers 1-9 for it to be valid"	
+		move = gets.chomp.to_i -1		
 	end
 
 end
