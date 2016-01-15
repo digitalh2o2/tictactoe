@@ -9,7 +9,10 @@ class Game
 	end
 
 	@used_numbers = []
+	
+	#this will keep track of turns throughout, if it reaches over 9, draw game shoudl appear.
 	$turn = 0
+
 	#these are the winning combinations that will end the game
 	def win
 		$winning_combinations = [[0,1,2],[0,4,8],[0,3,6],[1,4,7],[2,5,8],[2,4,6],[3,4,5],[6,7,8]]
@@ -44,20 +47,30 @@ class Game
 	end
 
 	#this will allow the player to pick a location
-	def make_move
+	def make_move(player,move)
 		case move
-		  when 3 then puts "You have moved to position 4"
-		 end		
+		  when 1 
+		  	if @used_numbers.include?(move)
+		  		puts "Number is already taken!"
+		  		move = gets.chomp.to_i-1
+		  	else
+		  		puts "You've successfully moved to square 1"
+		  		@board[0] = move
+		  		@used_numbers << move
+		  	end
+		end		
 	end
 
 	def player_one
 		puts "#{@player1.name}, please make your selection. Remember to use the numbers 1-9 for it to be valid"	
 		move = gets.chomp.to_i-1
-		if @used_numbers.include?(move)
+
+		unless @used_numbers.include?(move)
 			puts "That location is already taken."
 			puts "Please select another spot!"
 			move = gets.chomp.to_i-1
-		elsif move == (0..8)
+		end
+		if	move == (0..8)
 			puts ""
 			make_move(@player1, move)
 			board.show_board
@@ -125,7 +138,7 @@ class Player
 end
 
 
-tictac = Game.new
-tictac.start
+tictac = Game.new.start
+tictac.change_players
 
 
