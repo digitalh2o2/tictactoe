@@ -30,7 +30,7 @@ end
 @used_numbers = []
 
 
-
+#this is the Game class that shows the board
 class Game
 	attr_accessor :one, :two, :three, :four, :five, :six, :seven, :eight, :nine
 
