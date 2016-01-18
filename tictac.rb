@@ -1,133 +1,4 @@
-class Game
-
-	attr_accessor :player1, :player2, :board
-
-	def initialize
-		@board = Board.new
-		@player1 = Player.new("Player 1", "X")
-		@player2 = Player.new("Player 2", "O")
-	end
-
-	@used_numbers = []
-	
-	#this will keep track of turns throughout, if it reaches over 9, draw game shoudl appear.
-	$turn = 0
-
-	#these are the winning combinations that will end the game
-	def win
-		$winning_combinations = [[0,1,2],[0,4,8],[0,3,6],[1,4,7],[2,5,8],[2,4,6],[3,4,5],[6,7,8]]
-	end
-
-	#determins the player while adding to see if there's a draw
-	def change_players
-		if $turn == 0
-			player_one
-		else
-			player_two
-		end
-	end
-
-	#this gathers the information of the players and uses the Player class to add the information
-	def start
-		puts "Let's play a game of Tic Tac Toe!"
-		puts "What is your name Player 1?"
-		name = gets.chomp.capitalize
-		puts "Welcome #{name}! You will be #{@player1.name} and your symbol will be #{@player1.symbol}!"
-		puts "What is your name Player 2?"
-		second_name = gets.chomp.capitalize
-		puts "Welcome #{second_name}! You will be #{@player2.name} and your symbol will be #{@player2.symbol}!"	
-		board.show_board
-		instructions
-		change_players
-	end
-
-	#presents instructions to the players
-	def instructions
-		puts "From the graph above, please make a selection of where you would like to move during the game."
-	end
-
-	#this will allow the player to pick a location
-	def make_move(player,move)
-		case move
-		  when 1 
-		  	if @used_numbers.include?(move)
-		  		puts "Number is already taken!"
-		  		move = gets.chomp.to_i-1
-		  	else
-		  		puts "You've successfully moved to square 1"
-		  		@board[0] = move
-		  		@used_numbers << move
-		  	end
-		end		
-	end
-
-	def player_one
-		puts "#{@player1.name}, please make your selection. Remember to use the numbers 1-9 for it to be valid"	
-		move = gets.chomp.to_i-1
-
-		unless @used_numbers.include?(move)
-			puts "That location is already taken."
-			puts "Please select another spot!"
-			move = gets.chomp.to_i-1
-		end
-		if	move == (0..8)
-			puts ""
-			make_move(@player1, move)
-			board.show_board
-			$turn +=1
-			win(@player1, "X")
-		else
-			puts "Not the right selection!"
-			move = gets.chomp.to_i-1
-		end
-	end
-
-	def player_two
-		puts "#{@player2.name}, please make your selection. Remember to use the numbers 1-9 for it to be valid."
-		move = gets.chomp.to_i-1
-		if @used_numbers.include?(move)
-			puts "That location is already taken."
-			puts "Please select another spot!"
-			move = gets.chomp.to_i-1
-		elsif move == (0..8)
-			puts ""
-			make_move(@player2, move)
-			board.show_board
-			$turn +=1
-			win(@player2, "O")
-		else
-			puts "Not the right selection!"
-			move = gets.chomp.to_i-1
-		end
-	end			
-end
-
-#this will be the board that is used during the game
-class Board
-	attr_accessor :board, :game
-
-	def initialize
-		@board = [" ", " ", " ", " ", " " ," ", " ", " "]
-	end
-
-
-	#this presents the board with locations to the player
-	def show_board
-		puts "Below is the board"
-		puts "********************"
-		puts "--------|---------|---------"
-		puts "  1 #{@board[0]}   |  2 #{@board[1]}    |  3 #{@board[2]}   "
-		puts "--------|---------|---------"
-		puts "  4 #{@board[3]}   |  5 #{@board[4]}    |  6 #{@board[5]}   "
-		puts "--------|---------|---------"
-		puts "  7 #{@board[6]}   |  8 #{@board[7]}    |  9 #{@board[8]}   "
-		puts "--------|---------|---------"
-		puts "********************"
-	end
-end
-
-
-#this class will store the players information
+#player class that goes to Game class
 class Player
 	attr_accessor :name, :symbol
 
@@ -137,8 +8,236 @@ class Player
 	end
 end
 
+	#this is the set for the board and matches the 'move = gets.chomp' from the players
+def set
+	$one = "1"
+	$two = "2"
+	$three = "3"
+	$four = "4"
+	$five = "5"
+	$six = "6"
+	$seven = "7"
+	$eight = "8"
+	$nine = "9"
+	$turn = 0		
+end
 
-tictac = Game.new.start
-tictac.change_players
+#stores the numbers that have been used. 
+@used_numbers = []
+
+
+
+class Game
+	attr_accessor :one, :two, :three, :four, :five, :six, :seven, :eight, :nine
+
+	def display
+		puts ""
+		puts "Below is the board"
+		puts "********************"
+		puts "--------|---------|---------"
+		puts "  #{$one}     |  #{$two}      |  #{$three}   "
+		puts "--------|---------|---------"
+		puts "  #{$four}     |  #{$five}      |  #{$six}   "
+		puts "--------|---------|---------"
+		puts "  #{$seven}     |  #{$eight}      |  #{$nine}  "
+		puts "--------|---------|---------"
+		puts "********************"
+		puts ""
+	end
+end
+	
+#signals whose turn it is
+def current_player
+	if $turn == 0
+		playerone
+	else
+		playertwo
+	end
+end
+
+#checks to see if there is a winner or a draw. 
+def winner(player, symbol)
+	winner = false
+	if $one == $two && $two == $three ||
+		$one == $five && $five == $nine ||
+		$one == $four && $four == $seven ||
+		$two == $five && $five == $eight ||
+		$three == $six && $six == $nine ||
+		$three == $five && $five == $seven ||
+		$four == $five && $five == $six ||
+		$seven == $eight && $eight == $nine
+		winner = true
+		puts "Congrats #{player.name}, you won!"
+	elsif @used_numbers[8]
+		puts "Draw!"
+		winner = true
+	end
+	if winner == false
+		current_player
+	end
+end
+
+#this has the method for player one
+def playerone
+	puts "#{@player1.name}, please make your selection. Remember, numbers 1-9 for it to be valid."
+	move = gets.chomp
+	while @used_numbers.include?(move)
+		puts "That's already taken!"
+		puts "Please select another location"
+		move = gets.chomp.to_s
+	end
+	if move == (1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9)
+		make_move(@player1, move)
+		@game.display
+		$turn += 1
+		winner(@player1, "X")
+	else
+		make_move(@player1, move)
+		@game.display
+		$turn += 1
+		winner(@player1, "X")
+	end
+end
+
+def playertwo
+	puts "#{@player2.name}, please make your selection. Remember, numbers 1-9 for it to be valid."
+	move = gets.chomp
+	while @used_numbers.include?(move)
+		puts "That's already taken!"
+		puts "Please select another location"
+		move = gets.chomp
+	end
+	if move == (1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9)
+		make_move(@player2, move)
+		@game.display
+		$turn -= 1
+		winner(@player2, "O")
+	else
+		make_move(@player2, move)
+		@game.display
+		$turn -= 1
+		winner(@player2, "O")
+	end
+end
+
+
+#this starts off the game and gives the symbol for player 1 and player 2
+def start
+	set
+	puts "Let's play a game of Tic Tac Toe!"
+	puts "What is your name Player 1?"
+	player1 = gets.chomp.capitalize
+	@player1 = Player.new(player1, "X")
+	puts "Welcome #{@player1.name}, you'll be #{@player1.symbol} for this game."
+	puts "What is your name Player 2?"
+	player2 = gets.chomp.capitalize
+	@player2 = Player.new(player2, "O")
+	puts "Welcome #{@player2.name}, you'll be #{@player2.symbol} for this game."
+	@game = Game.new
+	@game.display
+end
+
+#shows the current board to both players to see if everything is taken up or free
+
+
+#this is the method that takes the arguments from the playerone and playertwo methods. Built of cases
+def make_move(player, move)
+	case move
+		when "1" 
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend."
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$one = player.symbol
+				@used_numbers << move
+			end
+		when "2"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend."
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$two = player.symbol
+				@used_numbers << move
+			end
+		when "3"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$three = player.symbol
+				@used_numbers << move
+			end
+		when "4"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$four = player.symbol
+				@used_numbers << move
+			end
+		when "5"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$five = player.symbol
+				@used_numbers << move
+			end
+		when "6"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$six = player.symbol
+				@used_numbers << move
+			end
+		when "7"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$seven = player.symbol
+				@used_numbers << move
+			end
+		when "8"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$eight = player.symbol
+				@used_numbers << move
+			end
+		when "9"
+			if @used_numbers.include?(move)
+				puts "That's already taken my friend"
+				puts "Please select another location!"
+				move = gets.chomp
+				make_move(player, move)
+			else
+				$nine = player.symbol
+				@used_numbers << move
+			end
+		end
+
+end
+
+start
+current_player
 
 
