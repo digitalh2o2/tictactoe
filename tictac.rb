@@ -1,3 +1,7 @@
+#this took a lot of time and is very raw. Helped to see others and will try to improve as time goes on
+#Will try to reduce code by a good chunk and see if I can clump the whole thing in just a class or two instead of outside of classes
+
+
 #player class that goes to Game class
 class Player
 	attr_accessor :name, :symbol
@@ -8,7 +12,7 @@ class Player
 	end
 end
 
-	#this is the set for the board and matches the 'move = gets.chomp' from the players
+#this is the set for the board and matches the 'move = gets.chomp' from the players
 def set
 	$one = "1"
 	$two = "2"
