@@ -2,11 +2,11 @@ class Mastermind
 
 	#the initialize includes the choices for the game, the master code which is an empty array. Final answer is the result of choices
 	def initialize
-		@choices = ["R", "G", "B", "Y", "H", "P"]
+		@choices = ["R","G","B","Y","H","P"]
 		@master_code = @choices.sample(4)
+		@turn = 0
 	end
 
-	$turn = 0
 
 	#start of the game. Leads player to instructions for the game and then to choices. 
 	def start
@@ -18,7 +18,7 @@ class Mastermind
 		print @master_code
 		puts "-----------------------------"
 		instructions
-		make_guess
+		play_game
 	end
 
 	#here are the instructions given to the player before the game begins.
@@ -28,19 +28,35 @@ class Mastermind
 		gets.chomp
 	end
 
-	#this gets the players input from the 6 colors available and splits them into an array.
-	def make_guess
-		puts "Please select four colors as your guess. They can either mix and match or all be the same"
-		puts "No spaces please!"
-		puts "Your choices are 'R', 'G', 'B', 'Y', 'H', 'P'."
-		guess = gets.chomp.upcase
-		compare(guess)
+	#this will provide the results the player and see if they won or not
+	def play_game
+		while @turn < 13
+			puts "Lets see if you figured out my code!"
+			puts "Please select four colors as your guess. They can either mix and match or all be the same"
+			puts "No spaces please!"
+			puts "Your choices are 'R', 'G', 'B', 'Y', 'H', 'P'."
+			guess = gets.chomp.upcase
+			feedback = compare(guess)
+			if feedback == "OOOO"
+				puts "You won!!!!"
+				puts "You have cracked the code of #{@master_code}"
+			else
+				puts "Sorry! Guess again"
+				puts "Here is currently what you have right #{feedback}"
+				puts "---------------"
+				puts "---------------"
+				@turn += 1
+				puts "That was turn number " + @turn.to_s
+				play_game
+			end
+			puts "You reached your max of 12 turns....game over!"
+		end
 	end
 
 	#this receives the players input and converts it into a new array with an index. 
 	def compare(guess)
 		feedback = []
-		guess.split('').each_with_index do |color, index|
+		guess.split('').each_with_index { |color, index|
 			if @master_code.include?(color)
 				if @master_code[index] == guess[index]
 					feedback << "O"
@@ -48,8 +64,8 @@ class Mastermind
 					feedback << "X"
 				end
 			end
-		end
-		print feedback.to_s
+		}
+		feedback.to_s
 	end
 
 
