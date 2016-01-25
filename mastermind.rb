@@ -15,7 +15,6 @@ class Mastermind
 		name = gets.chomp.capitalize
 		puts "Welcome #{name}! Here are the instructions for Mastermind"
 		puts "---------------------------- "
-		print @master_code
 		puts "-----------------------------"
 		instructions
 		play_game
@@ -37,9 +36,12 @@ class Mastermind
 			puts "Your choices are 'R', 'G', 'B', 'Y', 'H', 'P'."
 			guess = gets.chomp.upcase
 			feedback = compare(guess)
-			if feedback == "OOOO"
+			if feedback == ["O", "O", "O", "O"]
+				puts "~~~~~~~~~~~"
 				puts "You won!!!!"
+				puts "~~~~~~~~~~~"
 				puts "You have cracked the code of #{@master_code}"
+				exit
 			else
 				puts "Sorry! Guess again"
 				puts "Here is currently what you have right #{feedback}"
@@ -65,7 +67,7 @@ class Mastermind
 				end
 			end
 		}
-		feedback.to_s
+		feedback.to_a
 	end
 
 
